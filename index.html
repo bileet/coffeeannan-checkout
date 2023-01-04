@@ -12,13 +12,18 @@
       data-cb-site="coffeeannan"
     ></script>
 
-    <button
+    <a
       href="javascript:void(0)"
       data-cb-type="checkout"
       data-cb-item-0="1000g-Filter-CHF-Monthly"
       data-cb-item-0-quantity="1"
+      style="display: hidden"
     >
       Subscribe
-    </button>
+  </a>
+
+  <script>
+    document.querySelector('button').click()
+  </script>
   </body>
 </html>
