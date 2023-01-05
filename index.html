@@ -14,9 +14,9 @@
     ></script>
 
     <a
+      id="chargebee-btn"
       href="javascript:void(0)"
       data-cb-type="checkout"
-      data-cb-item-0="1000g-Filter-CHF-Monthly"
       data-cb-item-0-quantity="1"
     >
       Subscribe
@@ -24,8 +24,17 @@
 
 
   <script>
+    const url = new URLSearchParams(document.location.search);
+    const items = url.get('items')
+    console.log(items)
     window.onload = () => {
-        document.querySelector('a').click()
+        const chargebeeBtn = document.getElementById('chargebee-btn')
+        
+        chargebeeBtn.setAttribute(
+          'data-cb-item-0',
+          items
+          )
+        chargebeeBtn.click()
     }
   </script>
   </body>
