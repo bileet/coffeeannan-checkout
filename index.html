@@ -28,13 +28,11 @@
     const items = url.get('items')
     console.log(items)
     window.onload = () => {
-        const chargebeeBtn = document.getElementById('chargebee-btn')
-        
-        chargebeeBtn.setAttribute(
-          'data-cb-item-0',
-          items
-          )
-        chargebeeBtn.click()
+        let cbInstance = Chargebee.getInstance()
+        let cart = cbInstance.getCart()
+        let product = cbInstance.initializeProduct('1000g-Automatic-Machine')
+        cart.replaceProduct(product)
+        cart.proceedToCheckout()
     }
   </script>
   </body>
