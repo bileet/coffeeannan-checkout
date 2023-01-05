@@ -1,25 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Coffee Annan - Checkout</title>
-    <link rel="stylesheet" href="./assets/style.css">
-  </head>
-  <body>
-    <script
-      src="https://js.chargebee.com/v2/chargebee.js"
-      data-cb-site="coffeeannan"
-    ></script>
 
-    <a
-      id="chargebee-btn"
-      href="javascript:void(0)"
-      data-cb-type="checkout"
-      data-cb-item-0-quantity="1"
-    >
-      Subscribe
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Coffee Annan - Checkout</title>
+  <link rel="stylesheet" href="./assets/style.css">
+</head>
+
+<body>
+  <script src="https://js.chargebee.com/v2/chargebee.js" data-cb-site="coffeeannan"></script>
+
+  <a id="chargebee-btn" href="javascript:void(0)" data-cb-type="checkout" data-cb-item-0-quantity="1">
+    Subscribe
   </a>
 
 
@@ -28,12 +22,16 @@
     const items = url.get('items')
     console.log(items)
     window.onload = () => {
-        let cbInstance = Chargebee.getInstance()
-        let cart = cbInstance.getCart()
-        let product = cbInstance.initializeProduct('1000g-Automatic-Machine')
-        cart.replaceProduct(product)
-        cart.proceedToCheckout()
+      Chargebee.init({
+        site: "coffeeannan"
+      });
+      let cbInstance = Chargebee.getInstance()
+      let cart = cbInstance.getCart()
+      let product = cbInstance.initializeProduct('1000g-Automatic-Machine')
+      cart.replaceProduct(product)
+      cart.proceedToCheckout()
     }
   </script>
-  </body>
+</body>
+
 </html>
