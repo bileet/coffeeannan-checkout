@@ -1,9 +1,14 @@
 body {
-    background-image: url(./images/background.png);
+  background-image: url(./images/background.png);
+  background-repeat: no-repeat;
+}
+
+@media screen and (min-width: 600px) {
+  body {
     background-size: cover;
-    background-repeat: no-repeat;
+  }
 }
 
 a {
-    display: none;
+  display: none;
 }
