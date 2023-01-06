@@ -10,24 +10,21 @@
 </head>
 
 <body>
-  <script src="https://js.chargebee.com/v2/chargebee.js" data-cb-site="coffeeannan"></script>
-
-  <a id="chargebee-btn" href="javascript:void(0)" data-cb-type="checkout" data-cb-item-0-quantity="1">
-    Subscribe
-  </a>
-
+  <script src="https://js.chargebee.com/v2/chargebee.js"></script>
 
   <script>
-    const url = new URLSearchParams(document.location.search);
-    const items = url.get('items')
-    console.log(items)
+    const uri = new URLSearchParams(document.location.search)
+    const plan = uri.get('plan')
+    console.log(plan)
+
     window.onload = () => {
-      Chargebee.init({
-        site: "coffeeannan"
+      var chargebee = Chargebee.init({
+        site: "coffeeannan",
+        isItemsModel: true,
       });
       let cbInstance = Chargebee.getInstance()
       let cart = cbInstance.getCart()
-      let product = cbInstance.initializeProduct('1000g-Automatic-Machine')
+      let product = cbInstance.initializeProduct(plan)
       cart.replaceProduct(product)
       cart.proceedToCheckout()
     }
