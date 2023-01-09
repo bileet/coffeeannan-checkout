@@ -41,10 +41,10 @@
           </div>
         </div>
         <div class="form py-10 mt-6 bg-slate-100 px-6">
-          <fieldset class="grid grid-cols-2 gap-4">
+          <fieldset class="grid grid-cols-2 gap-4 hidden" id="pricing">
             <legend class="sr-only">Period</legend>
 
-            <div>
+            <div id="monthly-input" class="hidden">
               <input
                 type="radio"
                 name="period"
@@ -64,7 +64,7 @@
               </label>
             </div>
 
-            <div>
+            <div id="yearly-input" class="hidden">
               <input
                 type="radio"
                 name="period"
@@ -85,12 +85,12 @@
           </fieldset>
           <input type="hidden" id="selected-price-id" />
           <button
-          type="button"
+            type="button"
             class="mt-6 rounded border border-blue-600 bg-blue-600 px-8 py-1.5 text-sm font-medium text-white focus:outline-none focus:ring active:text-blue-500 cursor-pointer"
             id="open-checkout"
           >
             Pay
-        </button>
+          </button>
         </div>
       </form>
     </div>
@@ -98,7 +98,7 @@
     <script src="https://js.chargebee.com/v2/chargebee.js"></script>
     <script>
       const urlParams = new URLSearchParams(window.location.search);
-      const planId = urlParams.get('plan'); 
+      const planId = urlParams.get("plan");
 
       let prices = {
         month: {},
@@ -106,61 +106,64 @@
       };
 
       const initForm = () => {
-            const formData = new FormData(document.querySelector('form'));
-            $("#monthly-price").text(
-              prices.month[formData.get("currency")].price
-            );
-            $("#yearly-price").text(
-              prices.year[formData.get("currency")].price
-            );
+        const formData = new FormData(document.querySelector("form"));
+        $("#monthly-price").text(prices.month[formData.get("currency")].price);
+        $("#monthly-input").removeClass("hidden");
+        if (!!prices.year[formData.get("currency")]) {
+          $("#yearly-price").text(prices.year[formData.get("currency")].price);
+          $("#yearly-input").removeClass("hidden");
+        }
 
-            $("#selected-price-id").attr(
-              "value",
-              prices[formData.get("period")][formData.get("currency")].id
-            );
-          }
+        $("#selected-price-id").attr(
+          "value",
+          prices[formData.get("period")][formData.get("currency")].id
+        );
 
+        $("#pricing").removeClass("hidden");
+      };
 
-      fetch("https://chargebee.bilalbarina.repl.co/prices/" + planId)
-        .then((response) => response.json())
-        .then((data) => {
-          $('#plan-title').text(data.list[0].item_price.external_name)
-          data.list.forEach((item) => {
-            let item_price = item.item_price;
-            (item_price.period_unit == "month" ? prices.month : prices.year)[
-              item_price.currency_code
-            ] = {
-              id: item_price.id,
-              price: item_price.price / 100,
-            };
-          });
-          let currencies = Object.keys(prices.month);
-          currencies.forEach((currency) => {
-            $("#currencies-select").append(
-              $("<option/>").text(currency).attr("value", currency)
-            );
-            initForm();
-          });
-
-          $("form").on("change", function () {
-            initForm()
-          });
-
-          $("#open-checkout").on("click", function () {
-            const priceId = $("#selected-price-id").val()
-
-            var chargebee = Chargebee.init({
-              site: "coffeeannan",
-              isItemsModel: true,
+      window.onload = () => {
+        fetch("https://chargebee.bilalbarina.repl.co/prices/" + planId)
+          .then((response) => response.json())
+          .then((data) => {
+            $("#plan-title").text(data.list[0].item_price.external_name);
+            data.list.forEach((item) => {
+              let item_price = item.item_price;
+              (item_price.period_unit == "month" ? prices.month : prices.year)[
+                item_price.currency_code
+              ] = {
+                id: item_price.id,
+                price: item_price.price / 100,
+              };
             });
-            let cbInstance = Chargebee.getInstance();
-            let cart = cbInstance.getCart();
-            let product = cbInstance.initializeProduct(priceId);
-            product.setPlanQuantity(1);
-            cart.replaceProduct(product);
-            cart.proceedToCheckout();
+            let currencies = Object.keys(prices.month);
+            currencies.forEach((currency) => {
+              $("#currencies-select").append(
+                $("<option/>").text(currency).attr("value", currency)
+              );
+              initForm();
+            });
           });
+      };
+
+      $("form").on("change", function () {
+        initForm();
+      });
+
+      $("#open-checkout").on("click", function () {
+        const priceId = $("#selected-price-id").val();
+
+        var chargebee = Chargebee.init({
+          site: "coffeeannan",
+          isItemsModel: true,
         });
+        let cbInstance = Chargebee.getInstance();
+        let cart = cbInstance.getCart();
+        let product = cbInstance.initializeProduct(priceId);
+        product.setPlanQuantity(1);
+        cart.replaceProduct(product);
+        cart.proceedToCheckout();
+      });
     </script>
   </body>
 </html>
