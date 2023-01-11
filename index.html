@@ -6,157 +6,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Coffee Annan - Checkout</title>
     <link rel="stylesheet" href="./assets/style.css" />
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            container: {
-              center: true,
-            },
-          },
-        },
-      };
-    </script>
-    <script
-      src="https://code.jquery.com/jquery-3.6.3.min.js"
-      integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU="
-      crossorigin="anonymous"
-    ></script>
   </head>
 
   <body>
-    <div
-      class="container rounded-md shadow-lg border pt-6 mt-28 max-w-md bg-white flex flex-col justify-center"
-    >
-      <form>
-        <div class="flex flex-row justify-between px-6">
-          <div class="text-semibold" id="plan-title"></div>
-          <div>
-            <select
-              name="currency"
-              id="currencies-select"
-              class="p-2 rounded-md"
-            ></select>
-          </div>
-        </div>
-        <div class="form py-10 mt-6 bg-slate-100 px-6">
-          <fieldset class="grid grid-cols-2 gap-4 hidden" id="pricing">
-            <legend class="sr-only">Period</legend>
-
-            <div id="monthly-input" class="hidden">
-              <input
-                type="radio"
-                name="period"
-                value="month"
-                id="Monthly"
-                class="peer hidden"
-                checked
-              />
-
-              <label
-                for="Monthly"
-                class="block cursor-pointer rounded-lg border border-gray-100 p-4 text-sm font-medium shadow-sm hover:border-gray-200 peer-checked:border-blue-500 peer-checked:ring-1 peer-checked:ring-blue-500 bg-white"
-              >
-                <p class="text-gray-700">Monthly</p>
-
-                <p class="mt-1 text-gray-900" id="monthly-price"></p>
-              </label>
-            </div>
-
-            <div id="yearly-input" class="hidden">
-              <input
-                type="radio"
-                name="period"
-                value="year"
-                id="Yearly"
-                class="peer hidden"
-              />
-
-              <label
-                for="Yearly"
-                class="block cursor-pointer rounded-lg border border-gray-100 p-4 text-sm font-medium shadow-sm hover:border-gray-200 peer-checked:border-blue-500 peer-checked:ring-1 peer-checked:ring-blue-500 bg-white"
-              >
-                <p class="text-gray-700">Yearly</p>
-
-                <p class="mt-1 text-gray-900" id="yearly-price"></p>
-              </label>
-            </div>
-          </fieldset>
-          <input type="hidden" id="selected-price-id" />
-          <button
-            type="button"
-            class="mt-6 rounded border border-blue-600 bg-blue-600 px-8 py-1.5 text-sm font-medium text-white focus:outline-none focus:ring active:text-blue-500 cursor-pointer"
-            id="open-checkout"
-          >
-            Pay
-          </button>
-        </div>
-      </form>
-    </div>
-
+    
     <script src="https://js.chargebee.com/v2/chargebee.js"></script>
     <script>
       const urlParams = new URLSearchParams(window.location.search);
-      const planId = urlParams.get("plan");
+      const priceId = urlParams.get("pay");
 
-      if (!planId) {
-        window.location = 'https://www.coffeeannan.com/';
+      if (!priceId) {
+        window.location = "https://www.coffeeannan.com/";
       }
 
-      let prices = {
-        month: {},
-        year: {},
-      };
-
-      const initForm = () => {
-        const formData = new FormData(document.querySelector("form"));
-        $("#monthly-price").text(prices.month[formData.get("currency")].price);
-        $("#monthly-input").removeClass("hidden");
-        if (!!prices.year[formData.get("currency")]) {
-          $("#yearly-price").text(prices.year[formData.get("currency")].price);
-          $("#yearly-input").removeClass("hidden");
-        }
-
-        $("#selected-price-id").attr(
-          "value",
-          prices[formData.get("period")][formData.get("currency")].id
-        );
-
-        $("#pricing").removeClass("hidden");
-      };
-
       window.onload = () => {
-        fetch("/api/prices/" + planId)
-          .then((response) => response.json())
-          .then((data) => {
-            $("#plan-title").text(data.list[0].item_price.external_name);
-            data.list.forEach((item) => {
-              let item_price = item.item_price;
-              (item_price.period_unit == "month" ? prices.month : prices.year)[
-                item_price.currency_code
-              ] = {
-                id: item_price.id,
-                price: item_price.price / 100,
-              };
-            });
-            let currencies = Object.keys(prices.month);
-            currencies.forEach((currency) => {
-              $("#currencies-select").append(
-                $("<option/>").text(currency).attr("value", currency)
-              );
-              initForm();
-            });
-          });
-      };
-
-      $("form").on("change", function () {
-        initForm();
-      });
-
-      $("#open-checkout").on("click", function () {
-        const priceId = $("#selected-price-id").val();
-
         var chargebee = Chargebee.init({
           site: "coffeeannan",
           isItemsModel: true,
@@ -169,7 +32,7 @@
         product.setPlanQuantity(1);
         cart.replaceProduct(product);
         cart.proceedToCheckout();
-      });
+      };
     </script>
   </body>
 </html>
