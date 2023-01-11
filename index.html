@@ -100,6 +100,10 @@
       const urlParams = new URLSearchParams(window.location.search);
       const planId = urlParams.get("plan");
 
+      if (!planId) {
+        window.location = 'https://www.coffeeannan.com/';
+      }
+
       let prices = {
         month: {},
         year: {},
@@ -156,6 +160,8 @@
         var chargebee = Chargebee.init({
           site: "coffeeannan",
           isItemsModel: true,
+          enableRedirectMode: true,
+          iframeOnly: true,
         });
         let cbInstance = Chargebee.getInstance();
         let cart = cbInstance.getCart();
