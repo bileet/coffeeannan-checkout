@@ -127,7 +127,7 @@
       };
 
       window.onload = () => {
-        fetch("https://chargebee.bilalbarina.repl.co/prices/" + planId)
+        fetch("/api/prices/" + planId)
           .then((response) => response.json())
           .then((data) => {
             $("#plan-title").text(data.list[0].item_price.external_name);
