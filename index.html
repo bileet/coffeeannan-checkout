@@ -14,6 +14,7 @@
     <script>
       const urlParams = new URLSearchParams(window.location.search);
       const priceId = urlParams.get("pay");
+      const quantity = urlParams.get("quantity");
 
       if (!priceId) {
         window.location = "https://www.coffeeannan.com/";
@@ -29,7 +30,7 @@
         let cbInstance = Chargebee.getInstance();
         let cart = cbInstance.getCart();
         let product = cbInstance.initializeProduct(priceId);
-        product.setPlanQuantity(1);
+        product.setPlanQuantity(!!quantity ? quantity : 1);
         cart.replaceProduct(product);
         cart.proceedToCheckout();
       };
