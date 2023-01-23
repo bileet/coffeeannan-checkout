@@ -9,7 +9,6 @@
   </head>
 
   <body>
-    
     <script src="https://js.chargebee.com/v2/chargebee.js"></script>
     <script>
       const urlParams = new URLSearchParams(window.location.search);
@@ -30,7 +29,7 @@
         let cbInstance = Chargebee.getInstance();
         let cart = cbInstance.getCart();
         let product = cbInstance.initializeProduct(priceId);
-        product.setPlanQuantity(!!quantity ? quantity : 1);
+        product.setPlanQuantity(!quantity ? 1 : quantity);
         cart.replaceProduct(product);
         cart.proceedToCheckout();
       };
