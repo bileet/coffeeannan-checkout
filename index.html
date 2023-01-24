@@ -17,24 +17,26 @@
 
       const hashMap = {
         m1: {
-          "1": 1,
+          1: 1,
           "2-3": 3,
           "4-6": 1,
           "7-9": 2,
           "> 10": 3,
         },
         m2: {
-          "1": 2,
+          1: 2,
           "2-3": 6,
           "4-6": 3,
           "7-9": 5,
           "> 10": 6,
-        }
+        },
+      };
+
+      if (priceId.includes("300g") || priceId.includes("1000g")) {
+        const quantity = priceId.includes("Every-2-months")
+          ? hashMap.m2[cupsPerDay]
+          : hashMap.m1[cupsPerDay];
       }
-
-      console.log(cupsPerDay)
-
-      const quantity = priceId.includes('Every-2-months') ? hashMap.m2[cupsPerDay] : hashMap.m1[cupsPerDay]
 
       if (!priceId) {
         window.location = "https://www.coffeeannan.com/";
