@@ -14,6 +14,7 @@
       const urlParams = new URLSearchParams(window.location.search);
       const priceId = urlParams.get("pay");
       const cupsPerDay = urlParams.get("cups_per_day");
+      let quantity = 1;
 
       const hashMap = {
         m1: {
@@ -32,8 +33,8 @@
         },
       };
 
-      if (priceId.includes("300g") || priceId.includes("1000g")) {
-        const quantity = priceId.includes("Every-2-months")
+      if (!!cupsPerDay && (priceId.includes("300g") || priceId.includes("1000g"))) {
+        quantity = priceId.includes("Every-2-months")
           ? hashMap.m2[cupsPerDay]
           : hashMap.m1[cupsPerDay];
       }
@@ -52,7 +53,7 @@
         let cbInstance = Chargebee.getInstance();
         let cart = cbInstance.getCart();
         let product = cbInstance.initializeProduct(priceId);
-        product.setPlanQuantity(!quantity ? 1 : quantity);
+        product.setPlanQuantity(quantity);
         cart.replaceProduct(product);
         cart.proceedToCheckout();
       };
